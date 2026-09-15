@@ -1,0 +1,49 @@
+import requests
+
+OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL_NAME = "gemma4:31b-cloud" 
+
+def generate_commit_message(diff_payload: str) -> str:
+    """
+    Sends the git diff to the local Ollama API and returns the generated commit message.
+    """
+    
+    system_prompt = (
+        "You are an expert software engineer. Generate a concise, conventional "
+        "commit message for the provided git diff.\n"
+        "Format: <type>(<scope>): <subject>\n"
+        "Rules:\n"
+        "1. Start with a type (feat, fix, refactor, chore, docs, etc.).\n"
+        "2. Keep the subject line under 50 characters.\n"
+        "3. Do NOT output any explanations, markdown formatting, or introductory text. "
+        "Output strictly the commit message."
+    )
+
+    payload = {
+        "model": MODEL_NAME,
+        "system": system_prompt,
+        "prompt": f"Here is the diff:\n\n{diff_payload}",
+        "stream": False
+    }
+
+    try:
+        response = requests.post(OLLAMA_URL, json=payload, timeout=45)
+        response.raise_for_status()
+        
+        data = response.json()
+        return data.get("response", "").strip()
+        
+    except requests.exceptions.ConnectionError:
+        raise RuntimeError(
+            "Could not connect to Ollama."
+        )
+    except requests.exceptions.RequestException as e:
+        raise RuntimeError(f"Ollama API request failed: {e}")
+
+if __name__ == "__main__":
+    print("Testing connection to Ollama...")
+    try:
+        test_msg = generate_commit_message("diff --git a/test.txt b/test.txt\n+ Added a new test file.")
+        print(f"Response:\n{test_msg}")
+    except Exception as e:
+        print(f"Error: {e}")
