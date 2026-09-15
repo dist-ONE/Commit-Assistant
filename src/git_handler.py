@@ -1,4 +1,5 @@
 import subprocess
+import ollama_client
 
 def get_staged_files() -> list[str]:
     """
@@ -48,10 +49,9 @@ def extract_and_chunk_diffs(max_chunk_size: int = 4000) -> str:
             print(f"File {file} exceeds chunk limit. Running Map summarization...")
             safe_diff = diff[:max_chunk_size] + "\n...[TRUNCATED FOR SUMMARIZATION]..."
             
-            #summary = ollama_client.summarize_file(file, safe_diff)
-            mock_ai_summary = f"Refactored logic and updated methods in {file}."
+            summary = ollama_client.summarize_file(file, safe_diff)
             
-            processed_chunks.append(f"File: {file}\nSummary of changes: {mock_ai_summary}")
+            processed_chunks.append(f"File: {file}\nSummary of changes: {summary}")
         else:
             processed_chunks.append(f"File: {file}\nRaw Diff:\n{diff}")
 

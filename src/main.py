@@ -31,7 +31,7 @@ def main():
         print(f"\n{commit_message}\n")
         print("-"*50 + "\n")
         
-        choice = input("Do you want to commit with this message? [Y/N]: ").strip().lower()
+        choice = input("Do you want to commit with this message? [y/n]: ").strip().lower()
         
         if choice == 'y':
             execute_commit(commit_message)
