@@ -15,7 +15,7 @@ def get_staged_files() -> list[str]:
         ":!*.svg"
     ]
     
-    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    result = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", check=False)
     
     if result.returncode != 0:
         raise RuntimeError(f"Git command failed:\n{result.stderr}")
@@ -28,7 +28,7 @@ def get_file_diff(filepath: str) -> str:
     """
     
     command = ["git", "diff", "--staged", "--", filepath]
-    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    result = subprocess.run(command, capture_output=True, text=True, encoding="utf-8", check=False)
     
     return result.stdout.strip()
 

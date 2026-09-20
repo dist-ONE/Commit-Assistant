@@ -11,7 +11,7 @@ def get_repo_name() -> str:
     Gets the name of the root folder of the current git repository.
     """
 
-    result = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True, check=True)
+    result = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True, encoding="utf-8", check=True)
     return os.path.basename(result.stdout.strip())
 
 def get_latest_commit_hash() -> str:
@@ -19,7 +19,7 @@ def get_latest_commit_hash() -> str:
     Retrieves the SHA-1 hash of the commit we just made.
     """
 
-    result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True)
+    result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, encoding="utf-8", check=True)
     return result.stdout.strip()
 
 def execute_commit(commit_message: str):
@@ -28,7 +28,7 @@ def execute_commit(commit_message: str):
     """
 
     try:
-        subprocess.run(["git", "commit", "-m", commit_message], check=True)
+        subprocess.run(["git", "commit", "-m", commit_message], encoding="utf-8", check=True)
         print("\nSuccessfully committed!")
     except subprocess.CalledProcessError as e:
         print(f"\nFailed to commit: {e}")
