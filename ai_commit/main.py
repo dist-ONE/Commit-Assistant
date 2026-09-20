@@ -2,15 +2,15 @@ import sys
 import os
 import subprocess
 import argparse
-from git_handler import extract_and_chunk_diffs
-from ollama_client import generate_commit_message
-from memory import CommitMemory
+from ai_commit.git_handler import extract_and_chunk_diffs
+from ai_commit.ollama_client import generate_commit_message
+from ai_commit.memory import CommitMemory
 
 def get_repo_name() -> str:
     """
     Gets the name of the root folder of the current git repository.
     """
-    
+
     result = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True, check=True)
     return os.path.basename(result.stdout.strip())
 
@@ -45,7 +45,7 @@ def main():
         print("Analyzing staged files...")
         diff_payload = extract_and_chunk_diffs()
         
-        print("Retrieving semantic memory & generating message...")
+        print("Retrieving semantic memory and generating message...")
         similar_commits = memory.get_similar_commits(diff_payload)
         commit_message = generate_commit_message(diff_payload, similar_commits)
         

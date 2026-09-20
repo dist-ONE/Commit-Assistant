@@ -1,5 +1,5 @@
 import subprocess
-import ollama_client
+from ai_commit import ollama_client
 
 def get_staged_files() -> list[str]:
     """
