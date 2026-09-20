@@ -3,9 +3,9 @@ import requests
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL_NAME = "gemma4:31b-cloud" 
 
-def generate_commit_message(diff_payload: str) -> str:
+def generate_commit_message(diff_payload: str, past_commits: list[str]) -> str:
     """
-    Sends the git diff to the local Ollama API and returns the generated commit message.
+    Sends the git diff and few-shot examples to the local Ollama API.
     """
     
     system_prompt = (
@@ -13,11 +13,14 @@ def generate_commit_message(diff_payload: str) -> str:
         "commit message for the provided git diff.\n"
         "Format: <type>(<scope>): <subject>\n"
         "Rules:\n"
-        "1. Start with a type (feat, fix, refactor, chore, docs, etc.).\n"
-        "2. Keep the subject line under 50 characters.\n"
-        "3. Do NOT output any explanations, markdown formatting, or introductory text. "
-        "Output strictly the commit message."
+        "1. Keep the subject line under 50 characters.\n"
+        "2. Do NOT output explanations, markdown formatting, or introductory text."
     )
+
+    if past_commits:
+        system_prompt += "\n\nHere are examples of past commits from this repository to match the style:\n"
+        for msg in past_commits:
+            system_prompt += f"- {msg}\n"
 
     payload = {
         "model": MODEL_NAME,
@@ -72,7 +75,7 @@ def summarize_file(filename: str, diff_payload: str) -> str:
 if __name__ == "__main__":
     print("Testing connection to Ollama...")
     try:
-        test_msg = generate_commit_message("diff --git a/test.txt b/test.txt\n+ Added a new test file.")
+        test_msg = generate_commit_message("diff --git a/test.txt b/test.txt\n+ Added a new test file.", ["Initial commit", "Added feature X", "Fixed bug Y"])
         print(f"Response:\n{test_msg}")
     except Exception as e:
         print(f"Error: {e}")

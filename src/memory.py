@@ -40,7 +40,7 @@ class CommitMemory:
             metadatas=[{"message": commit_message}],
             ids=[commit_hash]
         )
-        print(f"💾 Stored commit in semantic memory.")
+        print(f"Stored commit in semantic memory.")
 
     def get_similar_commits(self, new_diff: str, n_results: int = 3) -> list[str]:
         """
