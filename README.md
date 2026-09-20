@@ -21,7 +21,7 @@ Unlike standard AI commit generators, `Git-Recall` uses a local vector database 
 
 1. Clone this repository:
    ```bash
-   git clone [https://github.com/yourusername/Git-Recall.git](https://github.com/yourusername/Git-Recall.git)
+   git clone https://github.com/yourusername/Git-Recall.git
    cd git-recall
    ```
 
