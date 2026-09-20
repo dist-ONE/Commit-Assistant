@@ -11,7 +11,7 @@ def generate_commit_message(diff_payload: str, past_commits: list[str]) -> str:
     system_prompt = (
         "You are an expert software engineer. Generate a concise, conventional "
         "commit message for the provided git diff.\n"
-        "Format: <type>(<scope>): <subject>\n"
+        "Format: <subject>\n"
         "Rules:\n"
         "1. Keep the subject line under 50 characters.\n"
         "2. Do NOT output explanations, markdown formatting, or introductory text."
